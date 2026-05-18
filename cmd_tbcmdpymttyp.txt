@@ -1,0 +1,67 @@
+COLUMN_NAME DATA_TYPE   NULLABLE    DATA_DEFAULT    COLUMN_ID   COMMENTS
+
+DW_PYMNT_TYP_ID	NUMBER(15,0)	No		1	"NAME: Data Warehouse Payment Type Identifier
+DESCRIPTION: The surrogate key generated during the Data Warehouse load process to uniquely identify a Payment Type dimension record.
+SOURCE: Data Warehouse unique sequence generator"
+
+PYMNT_TYP_DESCR	VARCHAR2(60 BYTE)	Yes		2	"NAME: Payment Type Description
+DESCRIPTION: Description of Payment Type
+SOURCE: PetWare
+dwpetnet.receiptpaymentmethod.receiptpaymentmethoddesc
+PAWS
+dwwpa.wp_account_type.account_type"
+
+HOSP_DAY_SUMMARY_TAB_COL_NAM	VARCHAR2(255 BYTE)	Yes		3	"NAME: Hospital Day Summary Table Column Name
+DESCRIPTION: Name of column in tb_cmf_hosp_day_summary, where this payment type would be summarized per hospital.
+If none, then use "N/A"
+SOURCE: Data Warehouse
+Hard coded when new payment type comes in"
+
+DW_CREATE_DT	DATE	No		4	"NAME: Data Warehouse Create Date
+DESCRIPTION: DW Metadata. The Date That The Record Was First Added To This Table In The Data Warehouse.
+This is the starting date/time of the process that created the record.
+SOURCE: Data Warehouse local system date/time (US-Pacific time zone)."
+
+DW_BEGIN_EFF_DT	DATE	No		5	"NAME: Data Warehouse Begin Effective Date
+DESCRIPTION: DW Metadata. The Effective Start Date/Time For This Record, or when this record first came into effect.
+This only applies to tables that track historical changes. For others, this is hard coded to 1/1/1900 00:00:00
+If this is the first instance of a given key, the value will be 1/1/1900 00:00:00
+For any other instance of a given key, this value will be one second after the effective end date of the previous instance.
+The one second difference is in there, so you can say MyDate BETWEEN Begin Eff Date AND End Eff Date and not worry about overlap.
+Example
+key dw_begin_eff_dt dw_end_eff_dt dw_load_dt dw_curr_row_ind
+ABC 1/1/1900 00:00:00 3/4/2011 09:23:58 2/1/1998 05:31:43 0
+ABC 3/4/2011 09:23:59 12/31/9999 23:59:59 3/4/2011 09:23:58 1
+SOURCE: Data Warehouse load process"
+
+DW_END_EFF_DT	DATE	No		6	"NAME: Data Warehouse End Effective Date
+DESCRIPTION: DW Metadata. The Effective End Date/Time For This Record, or when this record stopped being in effect.
+This only applies to tables that track historical changes. For others, this is hard coded to 12/31/9999 23:59:59
+If this is the last instance of a given key, the value will be 12/31/9999 23:59:59
+For any other instance of a given key, this value will be the date/time when the following instance is inserted, minus 1 second.
+The one second difference is in there, so you can say MyDate BETWEEN Begin Eff Date AND End Eff Date and not worry about overlap.
+Example
+key dw_begin_eff_dt dw_end_eff_dt dw_load_dt dw_curr_row_ind
+ABC 1/1/1900 00:00:00 3/4/2011 09:23:58 2/1/1998 05:31:43 0
+ABC 3/4/2011 09:23:59 12/31/9999 23:59:59 3/4/2011 09:23:58 1
+SOURCE: Data Warehouse"
+
+DW_DELETED_IND	NUMBER(38,0)	No		7	"NAME: Data Warehouse Deleted Indicator
+DESCRIPTION: DW Metadata. An indicator set to 1 to designate when a particular key has been removed from a source system of record.
+A value of 0 indicates that the key is still present in the source system of record.
+SOURCE: Derived by DW load process, by comparing source keys against target keys."
+
+DW_CURR_ROW_IND	NUMBER(38,0)	No		8	"NAME: Data Warehouse Current Row Indicator
+DESCRIPTION: DW Metadata. An Indicator Set To 0 In Cases Where This Record Is Not The Most Recent Version Of The Given Key. It Will Be Set To 1 For The Record That Is The Most Recent Version For A Given Key.
+This only applies to tables that track history. If this table does not track history, then this will be hard coded to 1
+Note, If The Key Has Been Removed From The Source System Of Record, This Indicator Will still Be Set To 1.
+SOURCE: Data Warehouse load process"
+
+DW_JOB_ID	NUMBER(15,0)	No		9	"NAME: Data Warehouse Job Identifier
+DESCRIPTION: DW Metadata. An Identifier For The Data Warehouse Load Process That Last Affected The Record.
+SOURCE: Data Warehouse database sequence generator"
+
+DW_LOAD_DT	DATE	No		10	"NAME: Data Warehouse Load Date
+DESCRIPTION: DW Metadata. The Date The Data Warehouse Load Process That Last Affected The Record.
+This is the starting date/time of the process that last inserted or updated the record.
+SOURCE: Data Warehouse local system date/time (US-Pacific time zone)."
